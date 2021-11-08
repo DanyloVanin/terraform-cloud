@@ -39,3 +39,21 @@ variable "subnet_name" {
   description = "Name for the subnet"
   default     = "jenkins-subnet"
 }
+
+variable "jenkins_k8s_config" {
+  description = "Name for the k8s secret required to configure k8s executers on Jenkins"
+  default     = "jenkins-k8s-config"
+}
+
+variable "github_username" {
+  description = "Github user/organization name where the terraform repo resides."
+}
+
+variable "github_token" {
+  description = "Github token to access repo."
+}
+
+variable "github_repo" {
+  description = "Github repo name."
+  default     = "solutions-terraform-jenkins-gitops"
+}
