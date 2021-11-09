@@ -183,11 +183,10 @@ resource "google_artifact_registry_repository" "artifact-repository" {
 resource "google_artifact_registry_repository_iam_member" "jenkins-artifact" {
   provider = google-beta
 
-  location = google_artifact_registry_repository.artifact-repository.location
-  repository = google_artifact_registry_repository.artifact-repository.name
   role   = "roles/artifactregistry.writer"
   member = module.workload_identity.gcp_service_account_fqn
 }
+
 data "local_file" "helm_chart_values" {
   filename = "${path.module}/values.yaml"
 }
