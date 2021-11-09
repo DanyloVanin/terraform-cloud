@@ -50,3 +50,21 @@ resource "google_compute_instance" "vm_0001" {
   }
 }
 
+resource "google_cloud_run_service" "main" {
+  name     = "cloudrun-srv"
+  location = var.subnet1_zone
+
+  template {
+    spec {
+      containers {
+        image = var.app_image
+      }
+    }
+  }
+
+  traffic {
+    percent         = 100
+    latest_revision = true
+  }
+  autogenerate_revision_name = true
+}
