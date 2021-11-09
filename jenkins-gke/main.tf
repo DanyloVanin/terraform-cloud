@@ -168,9 +168,10 @@ resource "google_project_iam_member" "jenkins-project" {
 /*****************************************
   Create Artifact Registry
  *****************************************/
-resource "google_artifact_registry_repository" "artifact-repository" {
+resource "google_artifact_registry_repository" "my-repo" {
   provider = google-beta
 
+  location = var.region
   project = module.enables-google-apis.project_id
   repository_id = "docker-repository"
   description = "Docker repository containing application artiafcts"
@@ -183,7 +184,7 @@ resource "google_artifact_registry_repository" "artifact-repository" {
 resource "google_artifact_registry_repository_iam_member" "jenkins-artifact" {
   provider = google-beta
 
-  repository = google_artifact_registry_repository.artifact-repository.name
+  repository = google_artifact_registry_repository.my-repo.name
   role   = "roles/artifactregistry.writer"
   member = module.workload_identity.gcp_service_account_fqn
 }
