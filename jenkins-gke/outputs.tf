@@ -37,7 +37,7 @@ output "jenkins_k8s_config_secrets" {
 
 output "jenkins_project_id" {
   description = "Project id of Jenkins GKE project"
-  value       = module.enables-google-apis.project_id
+  value       = module.project-services.project_id
 }
 
 output "zone" {
