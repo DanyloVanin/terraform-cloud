@@ -24,7 +24,7 @@ provider "kubernetes" {
  *****************************************/
 module "gke_auth" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/auth"
-  version = "~> 9.1"
+  version = ">= 9.1"
 
   project_id   = module.enables-google-apis.project_id
   cluster_name = module.jenkins-gke.name
