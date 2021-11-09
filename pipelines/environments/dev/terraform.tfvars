@@ -1,4 +1,4 @@
-project_id = "epam-demo-project-331616"
+project_id = "epam-final-project-331617"
 environment = "dev"
 subnet1_region = "us-central1"
 subnet1_zone = "us-central1-a"

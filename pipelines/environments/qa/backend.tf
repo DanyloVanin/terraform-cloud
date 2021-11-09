@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "epam-demo-project-331616-tfstate"
+    bucket = "epam-final-project-331617-tfstate"
     prefix = "env/qa"
   }
 }
