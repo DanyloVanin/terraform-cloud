@@ -1,32 +1,4 @@
 controller:
-  containerEnv:
-    - name: PROJECT_ID
-      valueFrom:
-        secretKeyRef:
-            name: jenkins-k8s-config
-            key: project_id
-    - name: GITHUB_REPO
-      valueFrom:
-        secretKeyRef:
-            name: github-secrets
-            key: github_repo
-    - name: GITHUB_USERNAME
-      valueFrom:
-        secretKeyRef:
-            name: github-secrets
-            key: github_username
-    - name: GITHUB_TOKEN
-      valueFrom:
-        secretKeyRef:
-            name: github-secrets
-            key: github_token
-    - name: jenkins_tf_ksa
-      valueFrom:
-        secretKeyRef:
-            name: jenkins-k8s-config
-            key: jenkins_tf_ksa
-  servicePort: 80
-  serviceType: LoadBalancer
   installPlugins:
     - kubernetes:latest
     - workflow-job:latest
@@ -37,84 +9,24 @@ controller:
     - google-source-plugin:latest
     - google-kubernetes-engine:latest
     - google-storage-plugin:latest
-    - blueocean:latest
-    - docker-custom-build-environment:latest
-    - credentials:latest
-    - docker-commons:latest
-    - docker-workflow:latest
-    - job-dsl:latest
-    - configuration-as-code:latest
-    - jdk-tool:latest
-  JCasC:
-    enabled: true
-    configScripts:
-        cloud: |
-            jenkins:
-                clouds:
-                    - kubernetes:
-                        name: "gke-executors"
-                        serverUrl: "https://kubernetes.default"
-                        jenkinsTunnel: "jenkins-agent:50000"
-                        jenkinsUrl: "http://jenkins:80"
-                        skipTlsVerify: true
-                        namespace: "default"
-                        templates:
-                            - name: "jenkins-jnlp"
-                              namespace: "default"
-                              nodeUsageMode: NORMAL
-                              label: "jnlp-exec"
-                              containers:
-                                - name: "jnlp"
-                                  image: "jenkins/jnlp-slave"
-                                  alwaysPullImage: false
-                                  workingDir: "/home/jenkins/agent"
-                                  ttyEnabled: true
-                                  command: ""
-                                  args: ""
-                                  resourceRequestCpu: "500m"
-                                  resourceLimitCpu: "1000m"
-                                  resourceRequestMemory: "1Gi"
-                                  resourceLimitMemory: "2Gi"
-                              volumes:
-                                - emptyDirVolume:
-                                    memory: false
-                                    mountPath: "/tmp"
-                              idleMinutes: "1"
-                              activeDeadlineSeconds: "120"
-                              slaveConnectTimeout: "1000"
-                            - name: "terraform"
-                              namespace: "default"
-                              nodeUsageMode: NORMAL
-                              serviceAccount: ${jenkins_tf_ksa}
-                              label: "terraform-exec"
-                              containers:
-                                - name: "terraform"
-                                  image: "hashicorp/terraform:1.10.0"
-                                  alwaysPullImage: false
-                                  workingDir: "/home/jenkins/agent"
-                                  ttyEnabled: true
-                                  command: "/bin/sh -c"
-                                  args: "cat"
-                                  resourceRequestCpu: "100m"
-                                  resourceLimitCpu: "500m"
-                                  resourceRequestMemory: "500Mi"
-                                  resourceLimitMemory: "1Gi"
-                              volumes:
-                                - emptyDirVolume:
-                                    memory: false
-                                    mountPath: "/tmp"
-                              podRetention: "never"
-                              activeDeadlineSeconds: "300"
-                              slaveConnectTimeout: "1000"
-        credentials: |
-            credentials:
-                system:
-                    domainCredentials:
-                    - credentials:
-                        - usernamePassword:
-                            scope: GLOBAL
-                            id: "github-token"
-                            username: ${GITHUB_USERNAME}
-                            password: ${GITHUB_TOKEN}
-                            description: "Github personal token"
-
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "1024Mi"
+    limits:
+      cpu: "1"
+      memory: "3500Mi"
+  javaOpts: "-Xms3500m -Xmx3500m"
+  serviceType: ClusterIP
+agent:
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "256Mi"
+    limits:
+      cpu: "1"
+      memory: "512Mi"
+persistence:
+  size: 100Gi
+serviceAccount:
+  name: cd-jenkins
