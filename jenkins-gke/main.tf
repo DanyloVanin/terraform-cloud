@@ -165,6 +165,29 @@ resource "google_project_iam_member" "jenkins-project" {
 
 }
 
+/*****************************************
+  Create Artifact Registry
+ *****************************************/
+resource "google_artifact_registry_repository" "artifact-repository" {
+  provider = google-beta
+
+  project = module.enables-google-apis.project_id
+  repository_id = "docker-repository"
+  description = "Docker repository containing application artiafcts"
+  format = "DOCKER"
+}
+
+/*****************************************
+  Grant Jenkins SA Permissions artifact writer
+ *****************************************/
+resource "google_artifact_registry_repository_iam_member" "jenkins-artifact" {
+  provider = google-beta
+
+  location = google_artifact_registry_repository.artifact-repository.location
+  repository = google_artifact_registry_repository.artifact-repository.name
+  role   = "roles/artifactregistry.writer"
+  member = module.workload_identity.gcp_service_account_fqn
+}
 data "local_file" "helm_chart_values" {
   filename = "${path.module}/values.yaml"
 }
