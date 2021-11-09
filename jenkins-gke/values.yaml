@@ -1,5 +1,4 @@
-container:
-  tag: "2.248"
+controller:
   containerEnv:
     - name: PROJECT_ID
       valueFrom:
@@ -28,21 +27,24 @@ container:
             key: jenkins_tf_ksa
   servicePort: 80
   serviceType: LoadBalancer
-  installLatestPlugins: true
   installPlugins:
-    - kubernetes:1.26.2
-    - workflow-job:2.39
-    - workflow-aggregator:2.6
-    - credentials-binding:1.23
-    - git:4.3.0
-    - blueocean:1.23.2
-    - docker-custom-build-environment:1.7.3
-    - credentials:2.3.11
-    - docker-commons:1.17
-    - docker-workflow:1.23
-    - job-dsl:1.77
-    - configuration-as-code:1.41
-    - jdk-tool:1.4
+    - kubernetes:latest
+    - workflow-job:latest
+    - workflow-aggregator:latest
+    - credentials-binding:latest
+    - git:latest
+    - google-oauth-plugin:latest
+    - google-source-plugin:latest
+    - google-kubernetes-engine:latest
+    - google-storage-plugin:latest
+    - blueocean:latest
+    - docker-custom-build-environment:latest
+    - credentials:latest
+    - docker-commons:latest
+    - docker-workflow:latest
+    - job-dsl:latest
+    - configuration-as-code:latest
+    - jdk-tool:latest
   JCasC:
     enabled: true
     configScripts:
@@ -87,7 +89,7 @@ container:
                               label: "terraform-exec"
                               containers:
                                 - name: "terraform"
-                                  image: "hashicorp/terraform:0.12.29"
+                                  image: "hashicorp/terraform:1.10.0"
                                   alwaysPullImage: false
                                   workingDir: "/home/jenkins/agent"
                                   ttyEnabled: true
@@ -115,32 +117,4 @@ container:
                             username: ${GITHUB_USERNAME}
                             password: ${GITHUB_TOKEN}
                             description: "Github personal token"
-        init-jobs: |
-            jobs:
-              - script: >
-                    multibranchPipelineJob('terraform-jenkins-create') {
-                        factory {
-                        workflowBranchProjectFactory {
-                            scriptPath('pipelines/environments/Jenkinsfile')
-                        }
-                        }
-                        branchSources {
-                        github {
-                            id('12312313')
-                            scanCredentialsId('github-token')
-                            repoOwner("${GITHUB_USERNAME}")
-                            repository("${GITHUB_REPO}")
-                            buildOriginBranch(true)
-                            buildOriginPRMerge(true)
-                            includes("dev prod PR*")
-                        }
-                        }
-                        orphanedItemStrategy {
-                        discardOldItems {
-                            numToKeep(10)
-                        }
-                        }
-                        triggers {
-                        periodic(1)
-                        }
-                    }
+
