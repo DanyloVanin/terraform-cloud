@@ -168,7 +168,7 @@ resource "google_project_iam_member" "jenkins-project" {
 /*****************************************
   Create Artifact Registry
  *****************************************/
-resource "google_artifact_registry_repository" "docker-repo" {
+resource "google_artifact_registry_repository" "app-docker-repo" {
   provider = google-beta
 
   location = var.region
@@ -185,11 +185,12 @@ resource "google_artifact_registry_repository_iam_member" "jenkins-artifact" {
   provider = google-beta
 
   project = module.project-services.project_id
-  location = google_artifact_registry_repository.docker-repo.location
-  repository = google_artifact_registry_repository.docker-repo.name
+  location = google_artifact_registry_repository.app-docker-repo.location
+  repository = google_artifact_registry_repository.app-docker-repo.name
   role   = "roles/writer"
   member = "serviceAccount:${module.jenkins-gke.service_account}"
 }
+
 data "local_file" "helm_chart_values" {
   filename = "${path.module}/values.yaml"
 }
