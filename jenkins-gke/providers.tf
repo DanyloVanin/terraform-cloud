@@ -13,7 +13,7 @@ provider "google-beta" {
   Kubernetes provider configuration
  *****************************************/
 provider "kubernetes" {
-  version                = "~> 1.10"
+  version                = ">= 1.10"
   load_config_file       = false
   host                   = module.jenkins-gke.endpoint
   token                  = data.google_client_config.default.access_token
