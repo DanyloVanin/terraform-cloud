@@ -1,6 +1,6 @@
 
-project_id = "epam-final-project-331617"
-tfstate_gcs_backend = "epam-final-project-331617-tfstate"
+project_id = "epam-project-331618"
+tfstate_gcs_backend = "epam-project-331618-tfstate"
 region = "us-east4"
 zones = ["us-east4-a"]
 ip_range_pods_name = "ip-range-pods"
