@@ -10,11 +10,6 @@ output "client_token" {
   value       = base64encode(data.google_client_config.default.access_token)
 }
 
-output "ca_certificate" {
-  description = "The cluster ca certificate (base64 encoded)"
-  value       = module.jenkins-gke.ca_certificate
-}
-
 output "service_account" {
   description = "The default service account used for running nodes."
   value       = module.jenkins-gke.service_account
