@@ -2,11 +2,11 @@
   Google Provider Configuration
  *****************************************/
 provider "google" {
-  version = "~> 3.1"
+  version = ">= 3.1"
 }
 
 provider "google-beta" {
-  version = "~> 3.1"
+  version = ">= 3.1"
 }
 
 /*****************************************
