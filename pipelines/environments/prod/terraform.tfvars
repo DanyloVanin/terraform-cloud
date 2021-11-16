@@ -1,5 +1,3 @@
-project_id = "epam-final-project-331617"
+project_id = "epam-project-331618"
 environment = "prod"
 subnet1_region = "us-central1"
-subnet1_zone = "us-central1-a"
-subnet1_cidr = "10.20.0.0/16"
