@@ -174,7 +174,7 @@ resource "google_artifact_registry_repository" "app-docker-repo" {
   location = var.region
   project = module.project-services.project_id
   repository_id = "docker-repository"
-  description = "Docker repository containing application artiafcts"
+  description = "Docker repository containing application artifacts"
   format = "DOCKER"
 }
 

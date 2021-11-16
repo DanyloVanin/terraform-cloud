@@ -18,6 +18,59 @@ controller:
       memory: "3500Mi"
   javaOpts: "-Xms3500m -Xmx3500m"
   serviceType: ClusterIP
+  JCasC: 
+    configScripts:
+      cloud: | 
+          jenkins:
+            clouds:
+            - kubernetes:
+                containerCap: 10
+                containerCapStr: "10"
+                jenkinsTunnel: "jenkins-agent.default.svc.cluster.local:50000"
+                jenkinsUrl: "http://jenkins.default.svc.cluster.local:80"
+                name: "kubernetes"
+                namespace: "default"
+                podLabels:
+                - key: "jenkins/jenkins-jenkins-agent"
+                  value: "true"
+                serverUrl: "https://kubernetes.default"
+                templates:
+                - containers:
+                  - image: "jenkins/inbound-agent"
+                    livenessProbe:
+                      failureThreshold: 0
+                      initialDelaySeconds: 0
+                      periodSeconds: 0
+                      successThreshold: 0
+                      timeoutSeconds: 0
+                    name: "jnlp"
+                    ttyEnabled: true
+                    workingDir: "/home/jenkins/agent"
+                  id: "626aaeb7-5dba-4071-abab-febaa27c67d7"
+                  label: "jnlp-exec"
+                  name: "jnlp"
+                  namespace: "default"
+                  yamlMergeStrategy: "override"
+                - containers:
+                  - alwaysPullImage: true
+                    image: "ninech/jnlp-slave-with-docker"
+                    livenessProbe:
+                      failureThreshold: 0
+                      initialDelaySeconds: 0
+                      periodSeconds: 0
+                      successThreshold: 0
+                      timeoutSeconds: 0
+                    name: "jnlp"
+                    ttyEnabled: true
+                    workingDir: "/home/jenkins/agent"
+                  id: "35755d0b-6ad1-4c54-9fc5-bb809b6eb3af"
+                  label: "docker-exec"
+                  name: "docker"
+                  volumes:
+                  - hostPathVolume:
+                      hostPath: "/var/run/docker.sock"
+                      mountPath: "/var/run/docker.sock"
+                  yamlMergeStrategy: "override"
 agent:
   resources:
     requests:
