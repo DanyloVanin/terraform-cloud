@@ -10,7 +10,7 @@ provider "google" {
  *****************************************/
 resource "google_cloud_run_service" "run_service" {
   name     = "cloudrun-qa"
-  location = var.subnet1_zone
+  location = var.subnet1_region
 
   template {
     spec {
