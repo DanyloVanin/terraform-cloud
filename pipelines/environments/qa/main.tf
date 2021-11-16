@@ -6,6 +6,26 @@ provider "google" {
 }
 
 /*****************************************
+  Activate CloudRun Service
+ *****************************************/
+module "project-services" {
+  source  = "terraform-google-modules/project-factory/google//modules/project_services"
+  version = ">= 10.0"
+
+  project_id = var.project_id
+
+  activate_apis = [
+    "iam.googleapis.com",
+    "run.googleapis.com",
+    "compute.googleapis.com",
+    "storage-component.googleapis.com",
+    "logging.googleapis.com",
+    "monitoring.googleapis.com",
+    "artifactregistry.googleapis.com"
+  ]
+}
+
+/*****************************************
   Create a GCE VM Instance
  *****************************************/
 resource "google_cloud_run_service" "run_service" {
