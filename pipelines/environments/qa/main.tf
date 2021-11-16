@@ -1,12 +1,4 @@
 /*****************************************
-  Locals
- *****************************************/
-locals {
-  vpc_network_name = "example-vpc-${var.environment}"
-  vm_name = "example-vm-${var.environment}-001"
-}
-
-/*****************************************
   Google Provider Configuration
  *****************************************/
 provider "google" {
@@ -14,27 +6,9 @@ provider "google" {
 }
 
 /*****************************************
-  Create a VPC Network 
- *****************************************/
-module "gcp-network" {
-  source       = "terraform-google-modules/network/google"
-  version      = ">= 1.4.0"
-  project_id   = var.project_id
-  network_name = local.vpc_network_name
-
-  subnets = [
-    {
-      subnet_name   = "${local.vpc_network_name}-${var.subnet1_region}"
-      subnet_ip     = var.subnet1_cidr
-      subnet_region = var.subnet1_region
-    },
-  ]
-}
-
-/*****************************************
   Create a GCE VM Instance
  *****************************************/
-resource "google_cloud_run_service" "main" {
+resource "google_cloud_run_service" "run_service" {
   name     = "cloudrun-qa"
   location = var.subnet1_zone
 
@@ -51,4 +25,12 @@ resource "google_cloud_run_service" "main" {
     latest_revision = true
   }
   autogenerate_revision_name = true
+}
+
+# Allow unauthenticated users to invoke the service
+resource "google_cloud_run_service_iam_member" "run_all_users" {
+  service  = google_cloud_run_service.run_service.name
+  location = google_cloud_run_service.run_service.location
+  role     = "roles/run.invoker"
+  member   = "allUsers"
 }
