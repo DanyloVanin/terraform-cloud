@@ -25,7 +25,7 @@ module "project-services" {
  *****************************************/
 module "jenkins-vpc" {
   source  = "terraform-google-modules/network/google"
-  version = "~> 2.0"
+  version = ">= 2.0"
 
   project_id   = module.project-services.project_id
   network_name = var.network_name
