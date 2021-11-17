@@ -197,7 +197,7 @@ data "local_file" "helm_chart_values" {
 }
 
 resource "helm_release" "jenkins" {
-  name       = "jenkins"
+  name       = "jenkins2"
   repository = "https://charts.jenkins.io"
   chart      = "jenkins"
   timeout    = 1200
