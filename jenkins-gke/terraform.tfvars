@@ -1,6 +1,6 @@
 
-project_id = "epam-project-demo"
-tfstate_gcs_backend = "epam-project-demo-tfstate"
+project_id = "epam-demo-terraform"
+tfstate_gcs_backend = "epam-demo-terraform-tfstate"
 region = "us-east4"
 zones = ["us-east4-a"]
 ip_range_pods_name = "ip-range-pods"

@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "epam-project-demo-tfstate"
+    bucket = "epam-demo-terraform-tfstate"
     prefix = "jenkins"
   }
 }
