@@ -88,7 +88,7 @@ module "jenkins-gke" {
 # allow GKE to pull images from GCR
 resource "google_project_iam_member" "gke" {
   project = module.project-services.project_id
-  role    = "roles/storage.objectViewer"
+  role    = "roles/storage.objectAdmin"
 
   member = "serviceAccount:${module.jenkins-gke.service_account}"
 }
