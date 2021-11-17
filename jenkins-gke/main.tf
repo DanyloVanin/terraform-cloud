@@ -70,6 +70,7 @@ module "jenkins-gke" {
   monitoring_service       = "monitoring.googleapis.com/kubernetes"
   remove_default_node_pool = true
   create_service_account   = true
+  service_account          = "create"
   identity_namespace       = "${module.project-services.project_id}.svc.id.goog"
   node_metadata            = "GKE_METADATA_SERVER"
   node_pools = [
@@ -96,7 +97,7 @@ resource "google_project_iam_member" "gke" {
 /*****************************************
   Jenkins Workload Identity
  *****************************************/
-module "workload_identity" {
+module "workload-identity" {
   source              = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
   use_existing_k8s_sa = true
   name                = module.jenkins-gke.service_account
