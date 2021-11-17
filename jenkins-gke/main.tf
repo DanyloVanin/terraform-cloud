@@ -113,6 +113,13 @@ resource "google_project_iam_member" "cluster-dev" {
   member  = module.workload_identity.gcp_service_account_fqn
 }
 
+# enable GSA to manage artifact registry
+resource "google_project_iam_member" "artifact-registry" {
+  project = module.project-services.project_id
+  role    = "roles/artifactregistry.writer"
+  member  = module.workload_identity.gcp_service_account_fqn
+}
+
 data "google_client_config" "default" {
 }
 
@@ -163,7 +170,6 @@ resource "google_project_iam_member" "jenkins-project" {
   role    = "roles/editor"
 
   member = module.workload_identity.gcp_service_account_fqn
-
 }
 
 /*****************************************
