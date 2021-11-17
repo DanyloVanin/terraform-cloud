@@ -99,7 +99,7 @@ resource "google_project_iam_member" "gke" {
 
 module "workload_identity" {
   source              = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
-  version             = "~> 7.0"
+  version             = ">= 7.0"
   project_id          = module.project-services.project_id
   name                = "jenkins-wi-${module.jenkins-gke.name}"
   namespace           = "default"
