@@ -1,3 +1,3 @@
-project_id = "epam-project-331618"
+project_id = "epam-demo-terraform"
 environment = "prod"
 subnet1_region = "us-central1"
