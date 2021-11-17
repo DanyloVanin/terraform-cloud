@@ -97,7 +97,7 @@ resource "google_project_iam_member" "gke" {
 /*****************************************
   Jenkins Workload Identity
  *****************************************/
-module "workload-identity" {
+module "workload_identity" {
   source              = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
   use_existing_k8s_sa = true
   name                = module.jenkins-gke.service_account
