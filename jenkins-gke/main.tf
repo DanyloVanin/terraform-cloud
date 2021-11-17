@@ -97,7 +97,7 @@ resource "google_project_iam_member" "gke" {
 /*****************************************
   Jenkins Workload Identity
  *****************************************/
-module "my-app-workload-identity" {
+module "workload-identity" {
   source              = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
   use_existing_k8s_sa = true
   name                = module.jenkins-gke.service_account
@@ -196,7 +196,7 @@ data "local_file" "helm_chart_values" {
 }
 
 resource "helm_release" "jenkins" {
-  name       = "jenkins2"
+  name       = "jenkins-release"
   repository = "https://charts.jenkins.io"
   chart      = "jenkins"
   timeout    = 1200
