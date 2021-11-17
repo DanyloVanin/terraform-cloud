@@ -120,6 +120,17 @@ resource "google_project_iam_member" "artifact-registry" {
   member  = module.workload_identity.gcp_service_account_fqn
 }
 
+resource "google_container_registry" "container-registry" {
+  project  = module.project-services.project_id
+  location = "US"
+}
+
+resource "google_storage_bucket_iam_member" "container_registy_service" {
+  bucket = google_container_registry.registry.id
+  role = "roles/containerregistry.ServiceAgent"
+  member = module.workload_identity.gcp_service_account_fqn
+}
+
 data "google_client_config" "default" {
 }
 
