@@ -36,22 +36,6 @@ controller:
                 serverUrl: "https://kubernetes.default"
                 templates:
                 - containers:
-                  - image: "jenkins/inbound-agent"
-                    livenessProbe:
-                      failureThreshold: 0
-                      initialDelaySeconds: 0
-                      periodSeconds: 0
-                      successThreshold: 0
-                      timeoutSeconds: 0
-                    name: "jnlp"
-                    ttyEnabled: true
-                    workingDir: "/home/jenkins/agent"
-                  id: "626aaeb7-5dba-4071-abab-febaa27c67d7"
-                  label: "jnlp-exec"
-                  name: "jnlp"
-                  namespace: "default"
-                  yamlMergeStrategy: "override"
-                - containers:
                   - alwaysPullImage: true
                     image: "ninech/jnlp-slave-with-docker"
                     livenessProbe:
@@ -66,10 +50,57 @@ controller:
                   id: "35755d0b-6ad1-4c54-9fc5-bb809b6eb3af"
                   label: "docker-exec"
                   name: "docker"
+                  serviceAccount: "jenkins-wi-jenkins"
                   volumes:
                   - hostPathVolume:
                       hostPath: "/var/run/docker.sock"
                       mountPath: "/var/run/docker.sock"
+                  yamlMergeStrategy: "override"
+                - containers:
+                  - image: "jenkins/jnlp-agent-terraform"
+                    livenessProbe:
+                      failureThreshold: 0
+                      initialDelaySeconds: 0
+                      periodSeconds: 0
+                      successThreshold: 0
+                      timeoutSeconds: 0
+                    name: "jnlp"
+                    workingDir: "/home/jenkins/agent"
+                  id: "ec407000-c565-4361-bb07-28995e844d6a"
+                  label: "terraform-exec"
+                  name: "terraform"
+                  serviceAccount: "jenkins-wi-jenkins"
+                  yamlMergeStrategy: "override"
+                - containers:
+                  - image: "heliostech/jenkins-jnlp-controller"
+                    livenessProbe:
+                      failureThreshold: 0
+                      initialDelaySeconds: 0
+                      periodSeconds: 0
+                      successThreshold: 0
+                      timeoutSeconds: 0
+                    name: "jnlp"
+                    ttyEnabled: true
+                    workingDir: "/home/jenkins/agent"
+                  id: "c5e20e94-99a9-43a9-b703-89b2f48afe02"
+                  label: "docker-gcloud-exec"
+                  name: "docker-gcloud"
+                  serviceAccount: "jenkins-wi-jenkins"
+                  yamlMergeStrategy: "override"
+                - containers:
+                  - image: "todd/jnlp-agent-gcloud"
+                    livenessProbe:
+                      failureThreshold: 0
+                      initialDelaySeconds: 0
+                      periodSeconds: 0
+                      successThreshold: 0
+                      timeoutSeconds: 0
+                    name: "jnlp"
+                    ttyEnabled: true
+                    workingDir: "/home/jenkins/agent"
+                  id: "1e1caabe-f88d-4187-a196-d3d0c9d6d9ec"
+                  label: "gcloud-exec"
+                  name: "gcloud"
                   yamlMergeStrategy: "override"
 agent:
   resources:
