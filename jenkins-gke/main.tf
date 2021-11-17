@@ -70,6 +70,7 @@ module "jenkins-gke" {
   monitoring_service       = "monitoring.googleapis.com/kubernetes"
   remove_default_node_pool = true
   create_service_account   = true
+  service_account          = "jenkins-k8s-sa"
   identity_namespace       = "${module.project-services.project_id}.svc.id.goog"
   node_metadata            = "GKE_METADATA_SERVER"
   node_pools = [
@@ -96,14 +97,12 @@ resource "google_project_iam_member" "gke" {
 /*****************************************
   Jenkins Workload Identity
  *****************************************/
-
-module "workload_identity" {
+module "my-app-workload-identity" {
   source              = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
-  version             = ">= 7.0"
-  project_id          = module.project-services.project_id
-  name                = "jenkins-wi-${module.jenkins-gke.name}"
-  namespace           = "default"
-  use_existing_k8s_sa = false
+  use_existing_k8s_sa = true
+  name                = module.jenkins-gke.service_account
+  namespace           = module.jenkins-gke.identity_namespace
+  project_id          = var.project_id
 }
 
 # enable GSA to add and delete pods for jenkins builders
