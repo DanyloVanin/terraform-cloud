@@ -70,7 +70,6 @@ module "jenkins-gke" {
   monitoring_service       = "monitoring.googleapis.com/kubernetes"
   remove_default_node_pool = true
   create_service_account   = true
-  service_account          = "jenkins-k8s-sa"
   identity_namespace       = "${module.project-services.project_id}.svc.id.goog"
   node_metadata            = "GKE_METADATA_SERVER"
   node_pools = [
