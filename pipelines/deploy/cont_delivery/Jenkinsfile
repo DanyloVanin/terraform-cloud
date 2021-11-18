@@ -1,0 +1,56 @@
+pipeline {
+    agent {
+        label 'terraform-exec'
+    }
+    
+    environment {
+        ENV="qa"
+        IMAGE_NAME="${ARTIFACT_REPO}/${APP_NAME}:$TAG"
+    }
+    
+    stages {
+        stage('Variables') {
+            steps {
+                sh 'echo $TERRAFORM_REPO'
+                sh 'echo $IMAGE_NAME'
+                sh 'echo $TAG'
+            }
+        }
+        
+        stage('Checkout IaaC') {
+            steps {
+                git branch: "master", credentialsId: 'github-token', url: "$TERRAFORM_REPO"
+            }
+        }
+        
+        stage('TF init') {
+            steps {
+                dir("pipelines/environments/$ENV") {
+                    sh 'echo $PWD'
+                    withCredentials([file(credentialsId: 'container-registry-sa', variable: 'SA_JSON')]) {
+                        sh "cp \$SA_JSON ./terraform-key.json"
+                    }
+                    sh 'ls'
+                    sh 'terraform init -reconfigure -no-color || exit 1'
+                    sh 'terraform validate -no-color || exit 1'
+                }
+            }
+        }
+        
+        stage('TF plan') {
+            steps {
+                dir("pipelines/environments/$ENV") {
+                    sh 'terraform plan -no-color --var "app_image=$IMAGE_NAME" || exit 1'
+                }
+            }
+        }
+        
+        stage('TF apply') {
+            steps {
+                dir("pipelines/environments/$ENV") {
+                    sh 'terraform apply -no-color --var "app_image=$IMAGE_NAME" -input=false -auto-approve || exit 1'
+                }
+            }
+        }
+    }
+}
