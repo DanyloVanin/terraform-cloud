@@ -3,6 +3,7 @@
  *****************************************/
 provider "google" {
   version = ">= 2.18.0"
+  credentials = file("terraform-key.json")
 }
 
 /*****************************************
